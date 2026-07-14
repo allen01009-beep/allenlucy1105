@@ -2,248 +2,824 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy 4th Anniversary! ❤️</title>
     <style>
-        /* 全域樣式與溫馨粉色調 */
-       body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    
-    /* 這裡換成愛心動圖作為背景 */
-    background-image: background-image: url('heart-bg.gif');
-    background-size: cover;          /* 讓背景鋪滿整個螢幕 */
-    background-position: center;     /* 背景置中 */
-    background-attachment: fixed;    /* 讓網頁捲動時，背景愛心固定不動，效果更好看 */
-    
-    color: #4c0519;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-x: hidden;
-}
-
-        header {
-            text-align: center;
-            margin: 40px 0;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-
-        /* 倒數計時器樣式 */
-        .counter-container {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 20px 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            text-align: center;
-            margin-bottom: 40px;
-            backdrop-filter: blur(5px);
-        }
-
-        .counter-days {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #be123c;
-        }
-
-        /* 拍立得照片牆 */
-        .gallery {
+        /* ==================== 1. 全域樣式與動態夢幻背景 ==================== */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffe4e6 0%, #fecdd3 50%, #fbcfe8 100%);
+            color: #4c0519;
+            min-height: 100vh;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            max-width: 1000px;
-            padding: 20px;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden; /* 徹底防止手機左右亂晃滾動 */
+            position: relative;
         }
 
-        .polaroid {
-            background: white;
-            padding: 15px 15px 30px 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            border-radius: 4px;
-            transition: transform 0.3s ease;
-            max-width: 220px;
-        }
-
-        /* 讓照片帶點隨機的旋轉角度，更像手貼相簿 */
-        .polaroid:nth-child(even) { transform: rotate(3deg); }
-        .polaroid:nth-child(odd) { transform: rotate(-3deg); }
-
-        .polaroid:hover {
-            transform: scale(1.08) rotate(0deg) !important;
-            z-index: 10;
-        }
-
-        .polaroid img {
-            width: 220px;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 2px;
-        }
-
-        .polaroid .caption {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 1rem;
-            color: #555;
-            font-weight: 500;
-        }
-
-        /* 驚喜情書區塊 */
-        .letter-section {
-            margin: 50px 0;
-            text-align: center;
-        }
-
-        .btn-love {
-            background-color: #be123c;
-            color: white;
-            border: none;
-            padding: 15px 35px;
-            font-size: 1.2rem;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(190, 18, 60, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .btn-love:hover {
-            background-color: #9f1239;
-            transform: translateY(-2px);
-        }
-
-        .hidden-letter {
+        #main-content {
             display: none;
-            max-width: 600px;
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            margin: 30px auto;
-            line-height: 1.8;
-            text-align: left;
-            animation: fadeIn 1.5s ease forwards;
+            opacity: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 1.5s ease;
+            position: relative;
+            z-index: 1;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 飄落愛心特效 */
-        .heart-particle {
+        .custom-photo-bg {
             position: fixed;
-            color: #f43f5e;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('background.PNG'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.15; 
+            filter: blur(4px); 
             pointer-events: none;
-            animation: floatUp 4s linear forwards;
-            z-index: 100;
+            z-index: 0;
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0); opacity: 1; }
-            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            width: 80vw;
+            height: 80vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(251,207,232,0.5) 0%, rgba(255,255,255,0) 70%);
+            z-index: 0;
+            pointer-events: none;
+            mix-blend-mode: color-burn;
+            animation: auroraMove 20s infinite alternate ease-in-out;
+        }
+        body::before { top: -20%; left: -20%; }
+        body::after { bottom: -20%; right: -20%; animation-delay: -10s; background: radial-gradient(circle, rgba(254,243,199,0.4) 0%, rgba(255,255,255,0) 70%); }
+
+        @keyframes auroraMove {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(10vw, 5vh) scale(1.1) rotate(180deg); }
+            100% { transform: translate(-5vw, -10vh) scale(0.9) rotate(360deg); }
         }
 
-        footer {
-            margin: 40px 0 20px 0;
-            font-size: 0.9rem;
-            color: #9f1239;
+        #bg-hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
+        }
+
+        .bg-heart { position: absolute; pointer-events: none; animation: bgFloatUp 8s linear infinite; bottom: -50px; will-change: transform, opacity; }
+        @keyframes bgFloatUp {
+            0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; }
+            15% { opacity: var(--max-opacity, 0.4); }
+            85% { opacity: var(--max-opacity, 0.4); }
+            100% { transform: translateY(-115vh) rotate(var(--rot, 360deg)) scale(var(--scale, 1)); opacity: 0; }
+        }
+
+        /* ==================== 2. 情書信封開場動畫樣式 ==================== */
+        #envelope-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #fecdd3, #fda4af);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background-color: #f43f5e;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-radius: 0 0 10px 10px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        .envelope-wrapper:hover { transform: scale(1.05); }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #e11d48;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 3;
+        }
+
+        .envelope-front {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid #f43f5e;
+            border-right: 150px solid #f43f5e;
+            border-bottom: 100px solid #be123c;
+            border-radius: 0 0 10px 10px;
+            z-index: 2;
+        }
+
+        .envelope-letter {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            width: 270px;
+            height: 170px;
+            background-color: #fff1f2;
+            border-radius: 5px;
+            z-index: 1;
+            transition: transform 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .envelope-letter p { margin: 5px 0; font-weight: bold; color: #be123c; font-size: 1.1rem; }
+        
+        .heart-seal {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            color: #ffffff;
+            z-index: 4;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.15); } 100% { transform: translateX(-50%) scale(1); } }
+
+        .envelope-wrapper.open .envelope-flap { transform: rotateX(180deg); z-index: 0; }
+        .envelope-wrapper.open .envelope-letter { transform: translateY(-120px); z-index: 5; }
+
+        /* ==================== 3. 音樂黑膠唱片樣式 ==================== */
+        .music-player-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 6px 12px 6px 6px;
+            border-radius: 40px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: transform 0.3s ease;
+        }
+        .vinyl-record {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #444 20%, #111 21%, #111 100%);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            animation: recordRotate 4s linear infinite;
+            animation-play-state: paused; 
+        }
+        .vinyl-center {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #f43f5e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            color: white;
+        }
+        @keyframes recordRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .music-player-container.playing { animation: musicBeat 1.4s ease-in-out infinite alternate; }
+        @keyframes musicBeat { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-4px) scale(1.02); } }
+        .music-status-text { font-size: 0.75rem; font-weight: bold; color: #be123c; margin-left: 8px; user-select: none; }
+
+        /* ==================== 4. 主網頁元件與 RWD 完美控制 ==================== */
+        header { 
+            text-align: center; 
+            margin: 30px 15px; 
+            background: rgba(255, 255, 255, 0.45); 
+            padding: 15px 20px; 
+            border-radius: 30px; 
+            backdrop-filter: blur(3px); 
+        }
+        header h1 { font-size: 1.8rem; margin: 0 0 8px 0; }
+        header p { margin: 0; font-size: 0.95rem; line-height: 1.4; }
+
+        /* 計時器容器優化 */
+        .counter-container { 
+            background: rgba(255, 255, 255, 0.85); 
+            padding: 20px 15px; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 25px rgba(244, 63, 94, 0.08); 
+            text-align: center; 
+            margin: 0 15px 30px 15px; 
+            width: calc(100% - 60px);
+            max-width: 460px;
+            box-sizing: border-box;
+        }
+        .countdown-clock { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
+        .clock-unit { 
+            background: linear-gradient(135deg, #be123c 0%, #9f1239 100%); 
+            color: white; 
+            padding: 8px 10px; 
+            border-radius: 10px; 
+            flex: 1;
+            max-width: 75px;
+            text-align: center; 
+        }
+        .clock-unit span { display: block; font-size: 1.6rem; font-weight: bold; font-family: monospace; }
+        .clock-unit label { font-size: 0.75rem; opacity: 0.85; display: block; margin-top: 2px; }
+
+        /* ==================== ✨ 精修版：文青手撕膠帶照片牆 ==================== */
+        .gallery { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 45px; 
+            width: 90%;
+            max-width: 560px; /* 剛好鎖定電腦版為漂亮的 2x2 */
+            padding: 30px 0; 
+            margin: 0 auto 20px auto;
+            justify-items: center;
+            align-items: center;
+        }
+
+        .polaroid { 
+            background: #ffffff; 
+            padding: 14px 14px 30px 14px; 
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.06), 0 5px 15px rgba(190, 18, 60, 0.02); 
+            border-radius: 4px; 
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            width: 210px;
+            aspect-ratio: 3 / 4;
+            cursor: pointer; 
+            position: relative;
+            background-image: linear-gradient(180deg, #ffffff 0%, #fffbfb 100%);
+            box-sizing: border-box;
+        }
+
+        /* 活潑手作錯落微旋轉 */
+        .polaroid:nth-child(1) { transform: rotate(-3deg) translateY(2px); }
+        .polaroid:nth-child(2) { transform: rotate(2.5deg) translateY(-3px); }
+        .polaroid:nth-child(3) { transform: rotate(-1.5deg) translateY(4px); }
+        .polaroid:nth-child(4) { transform: rotate(3deg) translateY(-2px); }
+
+        /* 頂部半透明微醺文青紙膠帶 */
+        .polaroid::before {
+            content: "";
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-1deg);
+            width: 80px;
+            height: 22px;
+            background-color: rgba(254, 205, 211, 0.7); 
+            backdrop-filter: blur(2px);
+            clip-path: polygon(0% 15%, 4% 100%, 96% 95%, 100% 5%, 92% 85%, 85% 10%, 75% 90%, 68% 15%, 55% 80%, 42% 20%, 30% 85%, 18% 10%, 8% 75%);
+            transition: all 0.4s ease;
+            z-index: 2;
+        }
+        .polaroid:nth-child(even)::before { transform: translateX(-50%) rotate(2.5deg); background-color: rgba(251, 207, 232, 0.75); }
+
+        .polaroid:hover { 
+            transform: scale(1.06) rotate(0deg) translateY(-10px) !important; 
+            z-index: 10; 
+            box-shadow: 0 25px 45px rgba(190, 18, 60, 0.12); 
+        }
+        .polaroid:hover::before { top: -10px; background-color: rgba(244, 63, 94, 0.8); }
+
+        .polaroid img { 
+            width: 100%; 
+            height: 175px; 
+            object-fit: cover; 
+            border-radius: 2px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            background-color: #fff1f2; 
+        }
+        .polaroid .caption { 
+            text-align: center; 
+            margin-top: 12px; 
+            font-weight: 600; 
+            font-size: 0.88rem;
+            color: #641e2e; 
+            letter-spacing: 0.5px;
+        }
+
+        /* ==================== 5. 燈箱、答題、情書區 (全手機自適應) ==================== */
+        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
+        .modal-content { background-color: white; padding: 20px; border-radius: 20px; max-width: 420px; width: 85%; box-shadow: 0 5px 30px rgba(0,0,0,0.3); position: relative; text-align: center; }
+        .close-btn { position: absolute; right: 15px; top: 10px; font-size: 24px; font-weight: bold; color: #aaa; cursor: pointer; }
+        .modal-album-container { position: relative; margin-bottom: 15px; }
+        .modal-img { width: 100%; max-height: 280px; object-fit: cover; border-radius: 10px; display: none; }
+        .modal-img.active { display: block; }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.8); border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1rem; cursor: pointer; font-weight: bold; color: #be123c; }
+        .prev-btn { left: 5px; } .next-btn { right: 5px; }
+        .modal-text-title { font-size: 1.2rem; font-weight: bold; color: #be123c; margin: 8px 0; }
+        .modal-text-desc { font-size: 0.9rem; color: #4a5568; line-height: 1.5; text-align: left; background: #fff1f2; padding: 12px; border-radius: 10px; }
+
+        /* 答題區 */
+        .quiz-section { margin: 20px 15px; text-align: center; width: calc(100% - 30px); max-width: 460px; }
+        .btn-love { background-color: #be123c; color: white; border: none; padding: 12px 30px; font-size: 1.1rem; border-radius: 30px; cursor: pointer; font-weight: bold; transition: all 0.2s; }
+        .quiz-box { display: none; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); text-align: left; margin-top: 15px; }
+        .quiz-box h3 { margin-top: 0; color: #be123c; font-size: 1.1rem; }
+        .question-text { font-size: 1.05rem; margin-bottom: 15px; font-weight: bold; }
+        .options-container { display: flex; flex-direction: column; gap: 10px; }
+        .option-btn { background-color: #fff1f2; border: 2px solid #fecdd3; padding: 10px 12px; border-radius: 12px; cursor: pointer; text-align: left; font-size: 0.95rem; color: #4c0519; }
+        .feedback-text { margin-top: 12px; font-weight: bold; text-align: center; font-size: 0.95rem; }
+
+        /* 情書打字機區 */
+        .hidden-letter { display: none; width: calc(100% - 30px); max-width: 460px; background: rgba(255, 255, 255, 0.96); padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px auto; line-height: 1.8; text-align: left; box-sizing: border-box; }
+        .hidden-letter h3 { font-size: 1.15rem; }
+        .hidden-letter p { font-size: 0.95rem; margin: 12px 0; }
+        .typing::after { content: '|'; animation: blink 0.8s infinite; color: #be123c; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* 許願開箱區 */
+        .gift-interactive-container { margin-top: 25px; background: #fff5f5; border: 2px dashed #f43f5e; border-radius: 15px; padding: 15px; text-align: center; }
+        .gift-box-wrapper { font-size: 3.5rem; margin: 10px 0; cursor: pointer; display: inline-block; animation: giftWobble 1.5s ease-in-out infinite; }
+        @keyframes giftWobble { 0% { transform: rotate(0deg) scale(1); } 15% { transform: rotate(-8deg) scale(1.05); } 30% { transform: rotate(6deg) scale(1.05); } 45% { transform: rotate(-4deg) scale(1.05); } 60% { transform: rotate(3deg) scale(1.05); } 100% { transform: rotate(0deg) scale(1); } }
+        .gift-box-wrapper.opening { animation: giftExplode 0.8s ease forwards; }
+        @keyframes giftExplode { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(0); opacity: 0; } }
+        .gift-input { width: 85%; padding: 10px 15px; font-size: 0.95rem; border: 2px solid #fda4af; border-radius: 25px; outline: none; text-align: center; margin-bottom: 12px; }
+        .btn-open-gift { background: linear-gradient(135deg, #e11d48, #be123c); color: white; border: none; padding: 10px 25px; font-size: 1rem; font-weight: bold; border-radius: 20px; cursor: pointer; }
+        .gift-result-card { display: none; background: white; border-radius: 12px; padding: 15px; border: 2px solid #fecdd3; }
+        .gift-result-text { font-size: 1.25rem; font-weight: bold; color: #e11d48; margin: 8px 0; }
+
+        .click-heart-particle { position: fixed; color: #e11d48; pointer-events: none; animation: clickFloatUp 3s linear forwards; z-index: 100; }
+        @keyframes clickFloatUp { 0% { transform: translateY(100vh) scale(0); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.4); opacity: 0; } }
+        footer { margin-top: auto; padding: 15px 0; font-size: 0.8rem; color: #9f1239; background: rgba(255, 255, 255, 0.3); width: 100%; text-align: center; }
+
+        /* ==================== 📱 超完美手機特化 Media Queries ==================== */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.6rem; }
+            .gallery { gap: 45px; padding: 20px 0; }
+            .polaroid { width: 230px; } /* 手機寬度單路直排，略為放大相片，看起來更飽滿舒適 */
+            .clock-unit span { font-size: 1.3rem; }
+            .clock-unit { padding: 6px 4px; }
+            .music-player-container { bottom: 15px; right: 15px; padding: 4px 8px 4px 4px; }
+            .vinyl-record { width: 38px; height: 38px; }
+            .music-status-text { display: none; } /* 手機版隱藏文字，只留精緻旋轉唱片，避免干擾畫面 */
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Happy 4th Anniversary! ❤️</h1>
-        <p>謝謝妳這四年的陪伴，未來的日子我們繼續一起走。</p>
-    </header>
-
-    <!-- 紀念日計時器 -->
-    <div class="counter-container">
-        <p>我們已經相愛了</p>
-        <div class="counter-days" id="days-count">0 天</div>
-        <p>每個與妳在一起的日子，都是最好的時光。</p>
-    </div>
-
-    <!-- 照片牆（請把 src 替換成你們的照片路徑） -->
-    <div class="gallery">
-        <div class="polaroid">
-            <img src="photo1.jpg" alt="紀念日照片1">
-            <div class="caption">第一次一起旅行 ✈️</div>
-        </div>
-        <div class="polaroid">
-            <img src="photo2.jpg" alt="紀念日照片2">
-            <div class="caption">好吃的周年大餐 🍕</div>
-        </div>
-        <div class="polaroid">
-            <img src="photo3.jpg" alt="紀念日照片3">
-            <div class="caption">隨手拍的搞怪日常 🤪</div>
-        </div>
-        <div class="polaroid">
-            <img src="photo4.jpg" alt="紀念日照片4">
-            <div class="caption">迎接我們的第四年 ✨</div>
+    <!-- 1. 開場情書信封畫面 -->
+    <div id="envelope-screen">
+        <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+            <div class="envelope-flap"></div>
+            <div class="heart-seal">❤️</div>
+            <div class="envelope-letter">
+                <p>親愛的 寶貝 💌</p>
+                <p style="font-size: 0.9rem; color: #6b7280;">妳有一封四周年情書</p>
+                <p style="font-size: 0.8rem; color: #f43f5e; margin-top: 15px;">👉 點擊卡片開箱</p>
+            </div>
+            <div class="envelope-front"></div>
         </div>
     </div>
 
-    <!-- 驚喜情書區 -->
-    <div class="letter-section">
-        <button class="btn-love" onclick="revealLetter()">點擊解鎖我的心聲 💌</button>
+    <!-- 2. 音訊播放器主體 -->
+    <audio id="bg-music" src="music.mp3" loop></audio>
+
+    <!-- 3. 右下角音樂律動黑膠唱片按鈕 -->
+    <div class="music-player-container" id="music-container">
+        <div class="vinyl-record" id="vinyl-btn" onclick="toggleMusic()">
+            <div class="vinyl-center">❤️</div>
+        </div>
+        <span class="music-status-text" id="music-status">MUSIC: OFF</span>
+    </div>
+
+    <!-- 4. 主網站畫面 -->
+    <div id="main-content">
+        <div class="custom-photo-bg"></div>
+        <div id="bg-hearts-container"></div>
+
+        <header>
+            <h1>Happy 4th Anniversary! ❤️</h1>
+            <p>謝謝妳這四年的陪伴，點擊下方的相片翻閱我們的回憶吧！</p>
+        </header>
+
+        <div class="counter-container">
+            <p id="counter-title" style="font-size: 1.05rem; font-weight: bold; margin-bottom: 10px;">我們已相愛了</p>
+            <div class="countdown-clock">
+                <div class="clock-unit"><span id="clock-days">00</span><label>天</label></div>
+                <div class="clock-unit"><span id="clock-hours">00</span><label>時</label></div>
+                <div class="clock-unit"><span id="clock-minutes">00</span><label>分</label></div>
+                <div class="clock-unit"><span id="clock-seconds">00</span><label>秒</label></div>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.85rem; opacity: 0.8;">每個與妳在一起的日子，都是最好的時光。</p>
+        </div>
+
+        <!-- 照片牆 -->
+        <div class="gallery">
+            <div class="polaroid" onclick="openAlbum(0)">
+                <img src="photo1.jpg" alt="1">
+                <div class="caption">第一次一起旅行 ✈️</div>
+            </div>
+            <div class="polaroid" onclick="openAlbum(1)">
+                <img src="photo2.jpg" alt="2">
+                <div class="caption">好好吃的大餐 🍕</div>
+            </div>
+            <div class="polaroid" onclick="openAlbum(2)">
+                <img src="photo3.jpg" alt="3">
+                <div class="caption">隨手拍的搞怪日常 🤪</div>
+            </div>
+            <div class="polaroid" onclick="openAlbum(3)">
+                <img src="photo4.jpg" alt="4">
+                <div class="caption">迎接我們的第四年 ✨</div>
+            </div>
+        </div>
+
+        <!-- 彈出相簿大視窗 -->
+        <div class="modal" id="album-modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeAlbum()">&times;</span>
+                <div class="modal-album-container" id="modal-images-box"></div>
+                <button class="nav-btn prev-btn" onclick="changeImg(-1)">&#10094;</button>
+                <button class="nav-btn next-btn" onclick="changeImg(1)">&#10095;</button>
+                <div class="modal-text-title" id="modal-title">相簿標題</div>
+                <div class="modal-text-desc" id="modal-desc">相簿文字描述</div>
+            </div>
+        </div>
+
+        <!-- 遊戲闖關區 -->
+        <div class="quiz-section">
+            <button class="btn-love" id="start-quiz-btn" onclick="startQuiz()">點擊解鎖我的心聲 💌</button>
+            <div class="quiz-box" id="quiz-box">
+                <h3 id="quiz-progress">四周年回憶大考驗 (1/3)</h3>
+                <div class="question-text" id="question-text">題目載入中...</div>
+                <div class="options-container" id="options-container"></div>
+                <div class="feedback-text" id="feedback-text"></div>
+            </div>
+        </div>
+
+        <!-- 最終過關才出現的情書與禮物 -->
         <div class="hidden-letter" id="love-letter">
-            <h3>親愛的：</h3>
-            <p>不知不覺，我們竟然已經一起走過四個年頭了！從一開始的青澀，到現在無話不談的默契，謝謝妳總是包容我的缺點，在背後支持我。</p>
-            <p>這本「數位紀念相簿」是我特地為妳寫的，想把我們珍貴的瞬間留下來。四周年快樂！未來的第五年、第十年，我也想一直牽著妳的手。</p>
-            <p style="text-align: right; font-weight: bold;">愛妳的 某某 筆 ✍️</p>
-        </div>
-    </div>
+            <h3 id="letter-heading" style="color: #be123c; margin-top: 0; opacity: 0; transition: opacity 1s ease;">🎉 恭喜全部答對！親愛的寶貝：</h3>
+            
+            <p class="type-para">不知不覺，我們竟然已經一起走過四個年頭了！從一開始的青澀，到現在無話不談的默契，謝謝妳總是包容我的缺點，在背後支持我。</p>
+            <p class="type-para">這本「數位紀念相簿」與小遊戲是我特地為妳準備的。四周年快樂！未來的第五年、第十年，我也想一直牽著妳的手。</p>
+            <p class="type-para" style="text-align: right; font-weight: bold; margin-top: 25px;">愛妳的 男友 筆 ✍️</p>
+            
+            <!-- 許願開箱區 -->
+            <div class="gift-interactive-container" id="gift-interactive-zone" style="opacity: 0; display: none;">
+                <div id="gift-setup-zone">
+                    <h4 style="margin: 0 0 10px 0; color: #be123c;">✨ 四周年特別限定：許願開箱 ✨</h4>
+                    <p style="margin: 0 0 15px 0; font-size: 0.85rem; color: #6b7280;">寫下願望並點擊開箱就會實現喔...</p>
+                    <input type="text" id="user-gift-input" class="gift-input" placeholder="請輸入妳想要的四周年禮物..." maxlength="30">
+                    <br>
+                    <div class="gift-box-wrapper" id="gift-box-emoji" onclick="triggerOpenGift()">🎁</div>
+                    <br>
+                    <button class="btn-open-gift" onclick="triggerOpenGift()">點擊打開禮物</button>
+                </div>
 
-    <footer>
-        Made with ❤️ for You | 2026
-    </footer>
+                <div id="gift-result-zone" class="gift-result-card">
+                    <h4 style="margin: 0 0 5px 0; color: #be123c;">🎉 恭喜願望成功解鎖！ 🎉</h4>
+                    <p style="margin: 5px 0; font-size: 0.9rem; color: #4c0519;">男友已收到並蓋章核准了妳的願望：</p>
+                    <div class="gift-result-text" id="display-gift-name">「想要的禮物」</div>
+                    <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: #e11d48; font-weight: bold;">✨ 准許人簽名：最愛妳的男友 ❤️ ✨</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>Made with ❤️ for You | 2026</footer>
+    </div>
 
     <script>
-        // 1. 計算在一起的天數 (請將下方的日期改為你們在一起的第一天，格式：YYYY-MM-DD)
-        const startDate = new Date("2022-07-11"); 
-        
-        function updateCounter() {
-            const today = new Date();
-            const timeDiff = today.getTime() - startDate.getTime();
-            const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-            document.getElementById("days-count").innerText = daysDiff + " 天";
-        }
-        updateCounter();
-
-        // 2. 解鎖情書與滿銀幕愛心特效
-        function revealLetter() {
-            const letter = document.getElementById("love-letter");
-            letter.style.display = "block";
+        // ==================== 1. 信封開啟與自動嘗試播放音樂邏輯 ====================
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            if(envelope.classList.contains('open')) return;
             
-            // 觸發愛心噴發
-            for(let i=0; i<30; i++) {
-                setTimeout(createHeart, i * 100);
+            envelope.classList.add('open');
+            for(let i=0; i<15; i++) { setTimeout(createClickHeart, i * 60); }
+            
+            const audio = document.getElementById('bg-music');
+            audio.play().then(() => {
+                updateMusicUI(true);
+            }).catch(err => {
+                console.log("瀏覽器阻擋自動播放，等手動點擊黑膠。");
+            });
+            
+            setTimeout(() => {
+                const envelopeScreen = document.getElementById('envelope-screen');
+                const mainContent = document.getElementById('main-content');
+                
+                envelopeScreen.style.opacity = '0';
+                envelopeScreen.style.transform = 'scale(0.9)';
+                
+                mainContent.style.display = 'flex';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                    envelopeScreen.style.display = 'none';
+                }, 50);
+            }, 1500);
+        }
+
+        // ==================== 2. 背景音樂與黑膠唱片律動控制邏輯 ====================
+        function toggleMusic() {
+            const audio = document.getElementById('bg-music');
+            if (audio.paused) {
+                audio.play();
+                updateMusicUI(true);
+            } else {
+                audio.pause();
+                updateMusicUI(false);
             }
         }
 
-        // 3. 創造飄落的愛心
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart-particle');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heart.style.animationDuration = (Math.random() * 2 + 2) + 's'; // 2-4秒
-            document.body.appendChild(heart);
+        function updateMusicUI(isPlaying) {
+            const vinyl = document.getElementById('vinyl-btn');
+            const container = document.getElementById('music-container');
+            const statusText = document.getElementById('music-status');
             
-            // 動畫結束後移除元素，避免佔用記憶體
+            if (isPlaying) {
+                vinyl.style.animationPlayState = 'running';
+                container.classList.add('playing');        
+                statusText.innerText = "MUSIC: ON 🎵";
+            } else {
+                vinyl.style.animationPlayState = 'paused';  
+                container.classList.remove('playing');     
+                statusText.innerText = "MUSIC: OFF";
+            }
+        }
+
+        // ==================== 3. 計時器邏輯 ====================
+        const anniversary4th = new Date("2026-11-05T00:00:00"); 
+        const loveStartDate = new Date("2022-11-05T00:00:00");  
+
+        function updateLiveClock() {
+            const now = new Date();
+            let diff, titleText;
+
+            if (now < anniversary4th) {
+                titleText = "⏳ 距離四周年大日子還有：";
+                diff = anniversary4th.getTime() - now.getTime();
+            } else {
+                titleText = "❤️ 我們已經攜手相愛了：";
+                diff = now.getTime() - loveStartDate.getTime();
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById("counter-title").innerText = titleText;
+            document.getElementById("clock-days").innerText = String(days).padStart(2, '0');
+            document.getElementById("clock-hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("clock-minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("clock-seconds").innerText = String(seconds).padStart(2, '0');
+        }
+        updateLiveClock(); 
+        setInterval(updateLiveClock, 1000);
+
+        // ==================== 4. 相簿資料庫 ====================
+        const albumData = [
+            {
+                title: "第一次一起旅行 ✈️",
+                items: [
+                    { src: "photo1.jpg", text: "這是我們旅行的第一張照片！還記得當時一出車站妳興奮的樣子，天氣好到不可思議，我們在景點拍了好多張，這張是我最喜歡的起點 🗺️。" },
+                    { src: "photo1_sub1.jpg", text: "這是旅行中去吃的那家超人氣排隊美食！雖然排了快一個小時，但看到妳吃到第一口時，眼睛發亮大喊『超好吃！』的表情，就覺得一切都值得了 🍱。" },
+                    { src: "photo1_sub2.jpg", text: "傍晚我們在海邊散步走累了，一邊吹著海風一邊聊天。那次的旅行，是我心裡最棒的回憶 🌅。" }
+                ]
+            },
+            {
+                title: "好吃的周年大餐 🍕",
+                items: [
+                    { src: "photo2.jpg", text: "這家餐廳是妳一直收在口袋名單裡的，那天慶祝我們在一起的日子，氣氛超級浪漫。不管食物多精緻，最美味的還是對面坐著的是妳 🍷。" },
+                    { src: "photo2_sub1.jpg", text: "主餐上來前幫妳拍的網美照，看著這道甜點妳開心的樣子，我的手機記憶體基本上都貢獻給妳的笑容了 🍓。" }
+                ]
+            },
+            {
+                title: "隨手拍的搞怪日常 🤪",
+                items: [
+                    { src: "photo3.jpg", text: "比起精修的照片，我更喜歡我們平時互相偷拍、做鬼臉的搞笑瞬間。在妳面前我可以做最真實的自己，不用顧慮形象 🤪。" },
+                    { src: "photo3_sub1.jpg", text: "還有這張妳趁我睡覺時偷偷拍我的崩壞照，雖然很壞，但這就是我們最自然的日常，謝謝妳總是帶給我這麼多快樂 😂。" }
+                ]
+            },
+            {
+                title: "迎接我們的第四年 ✨",
+                items: [
+                    { src: "photo4.jpg", text: "四年，一千四百多個日子。我們一起經歷了許多高低起伏，也變得越來越有默契。這本相簿記錄了我們的過去，而未來的每一頁，我也都想和妳一起填滿 💖。" }
+                ]
+            }
+        ];
+
+        let currentAlbumIdx = 0;
+        let currentImgIdx = 0;
+
+        function openAlbum(index) {
+            currentAlbumIdx = index;
+            currentImgIdx = 0;
+            const album = albumData[index];
+            document.getElementById('modal-title').innerText = album.title;
+            const imgBox = document.getElementById('modal-images-box');
+            imgBox.innerHTML = '';
+            album.items.forEach((item, i) => {
+                const img = document.createElement('img');
+                img.src = item.src;
+                img.classList.add('modal-img');
+                if(i === 0) img.classList.add('active');
+                imgBox.appendChild(img);
+            });
+            document.getElementById('modal-desc').innerText = album.items[0].text;
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => btn.style.display = album.items.length > 1 ? 'block' : 'none');
+            document.getElementById('album-modal').style.display = 'flex';
+        }
+
+        function closeAlbum() { document.getElementById('album-modal').style.display = 'none'; }
+
+        function changeImg(direction) {
+            const album = albumData[currentAlbumIdx];
+            const imgs = document.querySelectorAll('.modal-img');
+            imgs[currentImgIdx].classList.remove('active');
+            currentImgIdx += direction;
+            if (currentImgIdx >= album.items.length) currentImgIdx = 0;
+            if (currentImgIdx < 0) currentImgIdx = album.items.length - 1;
+            imgs[currentImgIdx].classList.add('active');
+            document.getElementById('modal-desc').innerText = album.items[currentImgIdx].text;
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('album-modal');
+            if (event.target == modal) closeAlbum();
+        }
+
+        // ==================== 5. 題目資料庫 ====================
+        const quizData = [
+            { question: "請問我們第一次正式約會，是去哪裡呢？", options: ["浪漫的淡水海邊看夕陽", "信義區威秀影城看電影", "文山區動物園看熊貓", "其實是在巷口的便利商店"], correct: 1 },
+            { question: "在我的手機裡，給妳起的最甜蜜/好笑的專屬綽號是什麼？", options: ["小寶貝", "胖嘟嘟氣球", "宇宙無敵小仙女", "那個愛生氣的女人"], correct: 2 },
+            { question: "妳猜我最喜歡妳的哪一個瞬間？", options: ["認真做事情的時候", "大口塞滿食物一臉幸福的時候", "對我笑著撒嬌的時候", "以上皆是，只要是妳我都喜歡"], correct: 3 }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function startQuiz() {
+            document.getElementById('start-quiz-btn').style.display = 'none';
+            document.getElementById('quiz-box').style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const feedback = document.getElementById('feedback-text');
+            feedback.innerText = ''; 
+            if (currentQuestionIndex < quizData.length) {
+                const currentData = quizData[currentQuestionIndex];
+                document.getElementById('quiz-progress').innerText = `四周年回憶大考驗 (${currentQuestionIndex + 1}/${quizData.length})`;
+                document.getElementById('question-text').innerText = currentData.question;
+                const optionsContainer = document.getElementById('options-container');
+                optionsContainer.innerHTML = ''; 
+                currentData.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.classList.add('option-btn');
+                    button.innerText = option;
+                    button.onclick = () => checkAnswer(index);
+                    optionsContainer.appendChild(button);
+                });
+            } else {
+                document.getElementById('quiz-box').style.display = 'none';
+                const loveLetter = document.getElementById('love-letter');
+                loveLetter.style.display = 'block';
+                for(let i=0; i<30; i++) { setTimeout(createClickHeart, i * 80); }
+                const heading = document.getElementById('letter-heading');
+                heading.style.opacity = '1';
+                
+                const paragraphs = document.querySelectorAll('.type-para');
+                let savedTexts = [];
+                paragraphs.forEach((p) => {
+                    savedTexts.push(p.innerText);
+                    p.innerText = ''; 
+                });
+                
+                let pIndex = 0;
+                function typeParagraph() {
+                    if (pIndex < paragraphs.length) {
+                        const currentP = paragraphs[pIndex];
+                        const fullText = savedTexts[pIndex];
+                        currentP.classList.add('typing'); 
+                        let charIndex = 0;
+                        
+                        const timer = setInterval(() => {
+                            if (charIndex < fullText.length) {
+                                currentP.innerText += fullText.charAt(charIndex);
+                                charIndex++;
+                            } else {
+                                clearInterval(timer);
+                                currentP.classList.remove('typing'); 
+                                pIndex++;
+                                setTimeout(typeParagraph, 400); 
+                            }
+                        }, 55); 
+                    } else {
+                        const giftZone = document.getElementById('gift-interactive-zone');
+                        giftZone.style.display = 'block';
+                        setTimeout(() => {
+                            giftZone.style.transition = 'opacity 1.2s ease';
+                            giftZone.style.opacity = '1';
+                        }, 50);
+                    }
+                }
+                setTimeout(typeParagraph, 600);
+            }
+        }
+
+        function checkAnswer(selectedIndex) {
+            const currentData = quizData[currentQuestionIndex];
+            const feedback = document.getElementById('feedback-text');
+            if (selectedIndex === currentData.correct) {
+                feedback.style.color = 'green';
+                feedback.innerText = '✅ 太棒了！妳答對了！❤️';
+                currentQuestionIndex++;
+                setTimeout(loadQuestion, 1200);
+            } else {
+                feedback.style.color = '#be123c';
+                const wrongTexts = ['❌ 答錯囉！晚上準備跪算盤！😜', '❌ 哎呀不對，再給妳一次機會好好想想！', '❌ 糟糕，看來有人忘記囉～皮在癢了！'];
+                feedback.innerText = wrongTexts[Math.floor(Math.random() * wrongTexts.length)];
+            }
+        }
+
+        // ==================== 6. 許願開箱邏輯 ====================
+        function triggerOpenGift() {
+            const inputVal = document.getElementById('user-gift-input').value.trim();
+            if (inputVal === "") {
+                alert("寶貝，妳還沒有輸入妳想要的禮物喔！");
+                return;
+            }
+            const giftEmoji = document.getElementById('gift-box-emoji');
+            giftEmoji.classList.add('opening');
+            for (let i = 0; i < 40; i++) { setTimeout(createClickHeart, i * 40); }
             setTimeout(() => {
-                heart.remove();
-            }, 4000);
+                document.getElementById('gift-setup-zone').style.display = 'none';
+                document.getElementById('display-gift-name').innerText = `「 ${inputVal} 」`;
+                document.getElementById('gift-result-zone').style.display = 'block';
+            }, 800);
+        }
+
+        // ==================== 7. 背景粒子與動態效果 ====================
+        const bgContainer = document.getElementById('bg-hearts-container');
+        function createBgHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('bg-heart');
+            const types = ['❤️', '✨', '🌸', '⚪'];
+            heart.innerHTML = types[Math.floor(Math.random() * types.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            const sizeRandom = Math.random();
+            let size = 14, blur = 0, maxOpacity = 0.4;
+            if (sizeRandom > 0.85) { size = Math.random() * 12 + 22; blur = 2; maxOpacity = 0.2; } 
+            else if (sizeRandom < 0.3) { size = Math.random() * 5 + 8; maxOpacity = 0.4; } 
+            else { size = Math.random() * 8 + 12; }
+            heart.style.fontSize = size + 'px';
+            if (blur > 0) heart.style.filter = `blur(${blur}px)`;
+            heart.style.setProperty('--max-opacity', maxOpacity);
+            heart.style.setProperty('--scale', Math.random() * 0.4 + 0.8);
+            heart.style.setProperty('--rot', (Math.random() > 0.5 ? 180 : -180) + 'deg');
+            const duration = Math.random() * 4 + 7;
+            heart.style.animationDuration = duration + 's';
+            bgContainer.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, duration * 1000);
+        }
+        setInterval(createBgHeart, 2000);
+
+        function createClickHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('click-heart-particle');
+            const icons = ['❤️', '✨', '💖'];
+            heart.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+            heart.style.animationDuration = (Math.random() * 1 + 2) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 3000);
         }
     </script>
 </body>
